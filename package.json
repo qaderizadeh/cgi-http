@@ -1,0 +1,23 @@
+{
+  "name": "cgi-http",
+  "version": "1.0.0",
+  "description": "CGI Implementation for nodejs and express",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qaderizadeh/cgi-http.git"
+  },
+  "keywords": [
+    "cgi",
+    "http",
+    "https",
+    "express"
+  ],
+  "author": "Qaderizadeh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qaderizadeh/cgi-http/issues"
+  },
+  "homepage": "https://github.com/qaderizadeh/cgi-http#readme"
+}
