@@ -1,40 +1,6 @@
 const http = require("http");
 const { Socket } = require("net");
 
-var Response = function () {
-  var body = false;
-  this.headers = {};
-
-  this.setHeader = function (name, value) {
-    this.headers[name] = value;
-  };
-
-  this.getHeader = function (field) {
-    return this.headers[field];
-  };
-
-  this.getHeaders = function () {
-    return this.headers;
-  };
-
-  this.write = function (message) {
-    if (!body) {
-      body = true;
-      for (const name in this.headers)
-        process.stdout.write(name + ": " + this.headers[name] + "\n");
-      process.stdout.write("\n");
-    }
-
-    if (message) process.stdout.write(message);
-  };
-
-  this.flush = function () {};
-
-  this.end = function () {
-    this.write.apply(this, arguments);
-  };
-};
-
 var Server = function (listener, options) {
   const request = new http.IncomingMessage(new Socket({ readable: true }));
 
@@ -75,15 +41,23 @@ var Server = function (listener, options) {
     process.stdin.destroy();
   });
 
-  var response = new Response();
-  Object.defineProperty(response, "statusCode", {
-    get: function () {
-      this.headers.Status || 200;
-    },
-    set: function (code) {
-      this.headers.Status = code;
-    },
-  });
+  var response = new http.ServerResponse(request);
+  response.body = false;
+  response.write = function (message) {
+    if (!this.body) {
+      this.body = true;
+      for (const name in this.getHeaders())
+        process.stdout.write(name + ": " + this.getHeader(name) + "\n");
+      process.stdout.write("\n");
+    }
+
+    if (message) process.stdout.write(message);
+  };
+  response.flush = function () {};
+
+  response.end = function () {
+    this.write.apply(this, arguments);
+  };
   this.listen = function () {
     listener(request, response);
   };
